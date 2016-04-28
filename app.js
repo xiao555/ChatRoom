@@ -4,15 +4,23 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var debug = require('debug')('chat');
 var routes = require('./routes/index');
 //var users = require('./routes/users');
 
 var app = express();
-
+app.set('port', process.env.PORT || 3000);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
+var server = app.listen(app.get('port'), function(){
+  debug('Express server listening on port ' + server.address().port);
+})
+
+require('./chat_server').listen(server);
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
