@@ -1,0 +1,26 @@
+
+.chat-body{overflow-y:scroll;height:355px;padding:0px;}
+.list-body{overflow-y:scroll;height:150px;padding:0px;}
+.msg-list-body{margin:8px;}
+.list-table{ margin-top: -1px; margin-bottom: 0px;}
+.emotion-panel{position:fixed;display:none;z-index:200;}
+
+ 
+/* msg */
+.msg-sys {margin-bottom: 10px;}
+.sys-tip{background-color: #F7F7F7;padding: 4px 8px;border-radius: 3px;color: #B1B1B1;}
+.msg-item {margin-bottom: 15px;}
+.msg-item.msg-left .msg-avatar,.msg-item.msg-left .msg-con-box{ float:left;}
+.msg-item.msg-right .msg-avatar,.msg-item.msg-right .msg-con-box{ float:right;}
+
+.msg-avatar {background-color: #ccc;width: 50px;height: 50px;border-radius: 50%;font-size: 24px;text-align: center;line-height: 50px;color: #fff;}
+.msg-con-box {background-color: #BEEFEA;border-radius: 4px;display: inline-block;padding: 5px 15px 25px 15px;margin-left: 15px;min-width: 100px;position: relative;z-index: 1;}
+.msg-item.msg-left .msg-con-box {margin-left: 15px;}
+.msg-item.msg-right .msg-con-box {margin-right: 15px;}
+
+.msg-con-box:before {display: block;position: absolute;content: '';width: 10px;height: 10px;background-color: inherit;border-radius: 2px;top: 5px;transform: rotate(45deg);}
+.msg-item.msg-left .msg-con-box:before{left: -4px;}
+.msg-item.msg-right .msg-con-box:before{right: -4px;}
+
+.msg-con-box .con {margin: 0;color: #FFF;}
+.msg-con-box .time {position: absolute;right: 5px;bottom: 5px;color: #FFF;font-size: 10px;}

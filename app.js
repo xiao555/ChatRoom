@@ -1,27 +1,60 @@
-﻿var http = require("http")
-	,socket = require("socket.io")
-	,fs = require("fs");
-var app,io;
-	app = http.createServer(function(req, res) {
-		//读取本程序运行位置的client.html文件
-		fs.readFile(__dirname+"/client.html",function(err, data){
-			res.writeHead(200);//设置200HTTP状态
-			res.end(data);
-		});
-	});
-	//Http服务器绑定的端口
-	app.listen(86);
-	io = socket.listen(app);
-	//设置socket.io日志级别
-	io.set("log level", 1); 
-	//监听链接事件
-	io.sockets.on("connection",function(socket){
-		//响应客户端msg事件
-		socket.on("msg",function(data){
-			console.log("Get a msg from client ...");
-			//控制台输出接受到的数据，实际项目可无
-			console.log(data);
-			//把收到的信息广播出去
-			socket.broadcast.emit("chat message",data);
-		});
-	});
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
+var routes = require('./routes/index');
+//var users = require('./routes/users');
+
+var app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', routes);
+//app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
+
+module.exports = app;

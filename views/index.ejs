@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Socket聊天室v0.0.1</title>
+	<!-- Bootstrap-->
+	<link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/css/index.css">
+</head>
+<body class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h3 class="text-center">Express4 + Socket.io 聊天室</h3>
+		</div>
+	</div>
+
+	<div class="row">
+		<!-- 聊天区 -->
+		<div class="col-sm-8">
+			<!-- 聊天内容 -->
+			<div class="panel panel-default">
+				<div class="panel-heading"><span class="glyphicon glyphicon-earphone"></span>
+                    &nbsp;聊天内容</div>
+				<div class="panel-body chat-body">
+					<div class="msg-list-body">
+						<!-- 消息列表 -->
+						<!-- <div class="clearfix msg-wrap">
+                        <div class="msg-head">
+                        <span class="msg-name label label-primary pull-left">
+                        <span class="glyphicon glyphicon-user"></span>
+                        &nbsp;Jack
+                        </span>
+                        <span class="msg-time label label-default pull-left">
+                        <span class="glyphicon glyphicon-time"></span>
+                        &nbsp;21:34:15
+                        </span>
+                        </div>
+                        <div class="msg-content">test</div>
+                        </div> -->
+					</div>
+				</div>	
+			</div>
+			<!-- 输入框 -->
+			<div class="input-group input-group-lg">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="emotion-btn">
+						<img src="/img/emotion_smile.png" alt="" style="width: 24px; height: 24px;">
+					</button>
+				</span>
+				<input type="text" class="form-control" id="input-edit" placeholder="请输入聊天内容">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="sendMsgBtn">
+						发送
+						<span class="glyphicon glyphicon-send"></span>
+					</button>
+				</span>
+			</div>
+		</div>
+
+		<!-- 个人信息 -->
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-user"></span>
+					&nbsp;个人信息
+				</div>
+				<div class="panel-body">
+					<div class="col-sm-9">昵称：<span id="my-nickname">还未设置</span></div>
+					<div class="col-sm-3">
+					    <button class="btn btn-default" id="nicknameEditBtn">修改</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 在线列表 -->
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-list"></span>
+					&nbsp;在线名单
+				</div>
+				<div class="panel-body">
+					<table class="table table-hover list-table">
+					<!-- 在线名单列表 -->
+					<!-- <tr><td>test</td></tr> -->
+					</table>
+				</div>
+				<div class="panel-footer" id="list-count">当前在线：0人</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 添加或修改昵称弹窗 -->
+	<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal">
+	                    <span aria-hidden="true">&times;</span>
+	                    <span class="sr-only"></span>
+	                </button>
+	                <h4 class="modal-title" id="myModalLabel">请设置聊天昵称</h4>
+	            </div>
+	            <div class="modal-body">
+	                <div class="row">
+	                    <div class="col-sm-8 col-sm-push-2">
+	                        <div class="alert alert-danger" role="alert" id="nickname-error" style="display: none">
+	                            <span class="glyphicon glyphicon-remove"></span>
+	                            请填写昵称
+	                        </div>
+	                        <div class="input-group">
+	                            <span class="input-group-addon">昵称</span>
+	                            <input type="text" id="nickname-edit" class="form-control" placeholder="请输入昵称">
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-primary" id="applyNicknameBtn">应用昵称</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script src="http://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script src="/js/socket.io.js"></script>
+	<script src="/js/emotion.js"></script>
+	<script src="/js/index.js"></script>
+</body>
+</html>
