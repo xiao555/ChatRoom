@@ -18,7 +18,7 @@ var Schema = mongoose.Schema;
 //聊天记录表
 var ChatSchema = new Schema({
 	nickname: String,
-	time: Number,
+	time: String,
 	content: String
 });
 var ChatModel = db.model('chats',ChatSchema);
@@ -131,7 +131,7 @@ io.on('connection', function(_socket){
 	});
 
 	// 说话
-	_socket.on('say', function(_content){
+	_socket.on('say', function(_time, _content){
 		if('' == _socket.nickname || null == _socket.nickname){
 			return _socket.emit('need_nickname');
 		}
@@ -139,7 +139,7 @@ io.on('connection', function(_socket){
 		_content = _content.trim();
 		var chatinfo = new ChatModel();
 		chatinfo.nickname = _socket.nickname;
-		chatinfo.time = Date.now();
+		chatinfo.time = _time;
 		chatinfo.content = _content;
 		chatinfo.save(function(err) {
 			if (err) throw err;

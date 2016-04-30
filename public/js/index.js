@@ -42,8 +42,12 @@ chat_UI = {
 		this.loginModalShownEv();	//弹窗打开后input获取焦点
 		 
 		this.historyShow();		//点击显示历史消息事件
-
-
+		this.historyDel();		//弹窗关闭的时候清空历史记录
+	},
+	historyDel:function(){
+		if($('#history-modal').attr('style') == 'display: none;') {
+			$('.history-list-body').empty();
+		}
 	},
 	initEmotion:function(){
 		QxEmotion($('#emotion-btn'), $('#input-edit'));
@@ -207,6 +211,10 @@ chat_UI = {
 	historyShow:function(){
 		var self = this;
 		$("#showHistory").on('click',function() {
+			if($('#history-modal').css('display') == 'none') {
+			$('.history-list-body').empty();
+			console.log('OK');
+			}
 			$("#history-modal").modal('show');
 			console.log("调用");
 			chat_Socket.showHistory(chat_Utils.getUserColor());
@@ -244,7 +252,7 @@ chat_Socket = {
 		socket.emit('change_nickname', _nickname, clr);
 	},
 	say:function(_content){
-		socket.emit('say', _content);
+		socket.emit('say', chat_Utils.getLocalHMS(), _content);
 	},
 	needNicknameEv:function(){
 		var self = this;
