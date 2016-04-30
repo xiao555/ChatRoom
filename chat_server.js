@@ -1,19 +1,50 @@
 var io = require('socket.io')();
 var xssEscape = require('xss-escape');
 
+var mongoose = require('mongoose');
+
+//连接数据库users数据表
+var db = mongoose.createConnection('localhost','mychatroom');
+db.on('error',function(err) {
+	console.error(err);
+});
+var Schema = mongoose.Schema;
+// //用户表
+// var UserSchema = new Schema({
+// 	nickname: String,
+// });
+// var UserModel = db.model('users',UserSchema);
+
+//聊天记录表
+var ChatSchema = new Schema({
+	nickname: String,
+	time: Number,
+	content: String
+});
+var ChatModel = db.model('chats',ChatSchema);
+
+
 var nickname_list = [];
 
 // 检查是昵称是否已经存在
 function HasNickname(_nickname){
+	// UserModel.findOne({nickname: _nickname},function(err,user) {
+	// 	if (user) {
+	// 		return true;
+	// 	}
+	// });
 	for(var i=0; i<nickname_list.length; i++){
 		if(nickname_list[i] == _nickname){
 			return true;
 		}
 	}
-}
+};
 
 // 删除昵称
 function RemoveNickname(_nickname){
+	// UserModel.remove({nickname: _nickname},function(err,data) {
+	// 	if (err) throw err;
+	// });
 	for(var i=0; i< nickname_list.length; i++){
 		if(nickname_list[i] == _nickname){
 			nickname_list.splice(i, 1);
@@ -23,6 +54,17 @@ function RemoveNickname(_nickname){
 
 io.on('connection', function(_socket){
 	console.log(_socket.id + ':connection');
+	// //获取当前昵称保存在数组中
+	// var nickname_list = [];
+	// UserModel.find({}.function(err,data) {
+	// 	if (err) {
+	// 		console.error(err);
+	// 		return;
+	// 	}
+	// })
+	// for(var userItem in data){
+	// 	nickname_list.push(userItem.nickname);
+	// }
 
 	// 向当前用户发送命令和消息
 	_socket.emit('user_list', nickname_list);
@@ -95,11 +137,43 @@ io.on('connection', function(_socket){
 		}
 
 		_content = _content.trim();
-
+		var chatinfo = new ChatModel();
+		chatinfo.nickname = _socket.nickname;
+		chatinfo.time = Date.now();
+		chatinfo.content = _content;
+		chatinfo.save(function(err) {
+			if (err) throw err;
+		});
+		ChatModel.find({nickname: _socket.nickname},function(err,data) {
+			if (err) {
+	 		console.log('存储失败' + err);
+	 		return;
+	 		} else {
+	 		console.log('存储成功：' + data);
+	 		}
+		});
 		console.log(_socket.nickname + ': say('+_content+')');
 		// 广播 用户新消息
 		_socket.broadcast.emit('user_say', _socket.nickname, xssEscape(_content), _socket.color);
 		return _socket.emit('say_done', _socket.nickname, xssEscape(_content), _socket.color);
+	});
+
+	//显示历史记录
+	_socket.on('show_history',function(clr){
+		console.log('ok');
+		ChatModel.find({},function(err,data) {
+			if (err) {
+	 		console.error(err);
+	 		return;
+	 		} else {
+	 			console.log('data = ' + data);
+	 			console.log(data[0].nickname);
+	 			for(var i = 0;i < data.length;i++){
+					console.log(data[i].nickname, data[i].time, xssEscape(data[i].content), clr);
+					_socket.emit('return_history', data[i].nickname, data[i].time, xssEscape(data[i].content), clr);
+				}
+	 		} 
+		});
 	});
 })
 

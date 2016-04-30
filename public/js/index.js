@@ -40,6 +40,10 @@ chat_UI = {
 		
 		this.loginModalShowEv(); 	//弹窗打开时调整弹窗样式
 		this.loginModalShownEv();	//弹窗打开后input获取焦点
+		 
+		this.historyShow();		//点击显示历史消息事件
+
+
 	},
 	initEmotion:function(){
 		QxEmotion($('#emotion-btn'), $('#input-edit'));
@@ -48,6 +52,22 @@ chat_UI = {
 		var chat_body = $('.chat-body');
 		var height = chat_body.prop('scrollHeight');
 		chat_body.prop('scrollTop', height);
+	},
+	addHistoryMessage: function(_time, _content, _name, clr){
+		var history_list = $('.history-list-body');
+		_content = QxEmotion.Parse(_content);
+		var msgAlignCls = _name ==$('#my-nickname').text() ? 'msg-right':'msg-left';
+		history_list.append(
+			'<div class="msg-item clearfix '+msgAlignCls+'">\
+					<div class="msg-avatar" style="background-color:'+clr+';"><i class="glyphicon glyphicon-user"></i></div>\
+					<div class="msg-con-box" style="background-color:'+clr+';">\
+						<p class="con">'+_content+'</p>\
+						<time class="time">'+_time+'</time>\
+					</div>\
+				</div>'
+			);
+		this.chatBodyToBottom();
+
 	},
 	addMessage: function(_time, _content, _name, clr){
 		// 如果没有_name 则为系统消息
@@ -154,6 +174,7 @@ chat_UI = {
 			$('#login-modal').modal('show');
 		})
 	},
+	//注册 提交昵称事件
 	subNameEv:function(){
 		var self = this;
 		$('#nickname-edit').keydown(function(_event) {
@@ -182,6 +203,14 @@ chat_UI = {
 		$("#login-modal").on("shown.bs.modal", function (_event) {
 		    $('#nickname-edit').focus();
 		});
+	},
+	historyShow:function(){
+		var self = this;
+		$("#showHistory").on('click',function() {
+			$("#history-modal").modal('show');
+			console.log("调用");
+			chat_Socket.showHistory(chat_Utils.getUserColor());
+		})
 	}
 };
 
@@ -199,6 +228,17 @@ chat_Socket = {
 		this.userJoinEv(); //监听后端 新用户加入 广播
 		this.userQuitEv(); //监听后端 用户离开 广播
 		this.userSayEv();  //监听后端 其它用户消息 广播
+		this.chatHistoryEv();//监听后端 获取历史消息
+	},
+	showHistory:function(clr){
+		socket.emit('show_history',clr);
+		console.log('show');
+	},
+	chatHistoryEv:function(){
+		socket.on('return_history',function(_nickname, _time, _content, clr) {
+			console.log(_nickname, _time, _content, clr);
+			chat_UI.addHistoryMessage(_time, _content, _nickname, clr);
+		});
 	},
 	changeNickname:function(_nickname, clr){
 		socket.emit('change_nickname', _nickname, clr);

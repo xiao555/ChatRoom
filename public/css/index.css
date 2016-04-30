@@ -4,7 +4,7 @@
 .msg-list-body{margin:8px;}
 .list-table{ margin-top: -1px; margin-bottom: 0px;}
 .emotion-panel{position:fixed;display:none;z-index:200;}
-
+.history-body{overflow-y:scroll;padding:0px;max-height: 500px;min-height: 300px}
  
 /* msg */
 .msg-sys {margin-bottom: 10px;}
