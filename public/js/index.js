@@ -42,12 +42,6 @@ chat_UI = {
 		this.loginModalShownEv();	//弹窗打开后input获取焦点
 		 
 		this.historyShow();		//点击显示历史消息事件
-		this.historyDel();		//弹窗关闭的时候清空历史记录
-	},
-	historyDel:function(){
-		if($('#history-modal').attr('style') == 'display: none;') {
-			$('.history-list-body').empty();
-		}
 	},
 	initEmotion:function(){
 		QxEmotion($('#emotion-btn'), $('#input-edit'));
@@ -65,7 +59,7 @@ chat_UI = {
 			'<div class="msg-item clearfix '+msgAlignCls+'">\
 					<div class="msg-avatar" style="background-color:'+clr+';"><i class="glyphicon glyphicon-user"></i></div>\
 					<div class="msg-con-box" style="background-color:'+clr+';">\
-						<p class="con">'+_content+'</p>\
+						<p class="con"> ' + _name + ': ' +_content+'</p>\
 						<time class="time">'+_time+'</time>\
 					</div>\
 				</div>'
@@ -87,7 +81,7 @@ chat_UI = {
 				'<div class="msg-item clearfix '+msgAlignCls+'">\
 					<div class="msg-avatar" style="background-color:'+clr+';"><i class="glyphicon glyphicon-user"></i></div>\
 					<div class="msg-con-box" style="background-color:'+clr+';">\
-						<p class="con">'+_content+'</p>\
+						<p class="con">' + _name + ': '  +_content+'</p>\
 						<time class="time">'+_time+'</time>\
 					</div>\
 				</div>'
