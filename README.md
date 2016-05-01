@@ -467,3 +467,54 @@ ChatModel.find({nickname: _socket.nickname},function(err,data) {
 除了.find() 查找所有符合的数据，还有.findOne() 查找一条数据，第二个参数中的data就是返回的数据。
 
 至此基本的逻辑和操作我们都了解了，接下来就是Codeing的时间了！
+
+## 部署到vps上
+
+将项目搬到/var/www/chatroom/下，这里我是用git传到github上然后git clone过去的。
+
+### 安装mongodb服务
+
+由于我的vps是32位的CentOS，一直很头痛这个32位还有CentOS,但是里面又配置了一些梯子，不想折腾就没换，连Docker也用不了。。。那怎么安装mongodb呢？
+
+参考：[CentOS 6.5系统中使用yum安装MongoDB 2.6 教程](http://www.thinksaas.cn/topics/0/424/424694.html)
+
+#### 创建mongodb.repo文件
+
+在/etc/yum.repos.d/目录下创建文件mongodb.repo，它包含MongoDB仓库的配置信息，内容如下：
+
+```
+[mongodb]
+name=MongoDB Repository
+baseurl=http://downloads-distro.mongodb.org/repo/redhat/os/i686/
+gpgcheck=0
+enabled=1
+```
+
+#### 执行安装命令
+
+```
+sudo yum install mongodb-org
+```
+#### 启动MongoDB
+
+```
+sudo service mongod start
+```
+
+### 运行app.js
+
+切换到项目目录，为了能一直自行程序，我们用forever模块：
+
+```
+sudo npm -g install forever  //安装
+
+forever start app.js 		 //开启进程
+
+forever list 				 //查看所有进程
+
+forever stopall				 //关闭所有进程
+
+```
+现在在你服务器的3000端口我们的聊天室已经完美运行了！
+
+
